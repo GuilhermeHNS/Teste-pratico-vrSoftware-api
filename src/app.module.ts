@@ -4,6 +4,9 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import { ProdutoModule } from './produto/produto.module';
+import { LojaModule } from './loja/loja.module';
+import { ProdutoLojaModule } from './produto-loja/produto-loja.module';
 
 @Module({
   imports: [
@@ -21,7 +24,10 @@ import { join } from 'path';
         entities: [join(process.cwd(), 'dist/**/*.entity.js')],
         synchronize: configService.get('NODE_ENV') === 'development'
       })
-    })
+    }),
+    ProdutoModule,
+    LojaModule,
+    ProdutoLojaModule
   ],
   controllers: [AppController],
   providers: [AppService],
