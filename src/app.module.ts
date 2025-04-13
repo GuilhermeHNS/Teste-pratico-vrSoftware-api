@@ -22,7 +22,9 @@ import { ProdutoLojaModule } from './produto-loja/produto-loja.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASENAME'),
         entities: [join(process.cwd(), 'dist/**/*.entity.js')],
-        synchronize: configService.get('NODE_ENV') === 'development'
+        synchronize: configService.get('NODE_ENV') === 'development',
+        migrations: ['dist/migrations/*.js'],
+        migrationsRun: true
       })
     }),
     ProdutoModule,
