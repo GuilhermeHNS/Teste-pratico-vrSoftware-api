@@ -33,7 +33,7 @@ export class ProdutoService {
       .leftJoin('produto.lojas', 'produtoLoja');
 
     if (precoVenda) {
-      query.andWhere('produtoLoja.precoVenda = :precoVenda', { precoVenda })
+      query.andWhere('produtoLoja.precoVenda = :precoVenda', { precoVenda });
     }
 
     if (description) {
@@ -43,7 +43,6 @@ export class ProdutoService {
     if (custo) {
       query.andWhere('produto.custo = :custo', { custo: custo });
     }
-
     return await query.getMany();
   }
 

@@ -1,26 +1,68 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { LojaService } from 'src/loja/loja.service';
+import { ProdutoService } from 'src/produto/produto.service';
+import { Repository } from 'typeorm';
 import { CreateProdutoLojaDto } from './dto/create-produto-loja.dto';
 import { UpdateProdutoLojaDto } from './dto/update-produto-loja.dto';
+import { ProdutoLoja } from './entities/produto-loja.entity';
 
 @Injectable()
 export class ProdutoLojaService {
-  create(createProdutoLojaDto: CreateProdutoLojaDto) {
-    return 'This action adds a new produtoLoja';
+
+  constructor(
+    @InjectRepository(ProdutoLoja)
+    private readonly produtoLojaRepository: Repository<ProdutoLoja>,
+    private readonly produtoService: ProdutoService,
+    private readonly lojaService: LojaService
+  ) { }
+
+  async create(createProdutoLojaDto: CreateProdutoLojaDto) {
+    const produto = await this.produtoService.findOne(createProdutoLojaDto.idProduto);
+    const loja = await this.lojaService.findOne(createProdutoLojaDto.idLoja);
+    if (!produto || !loja) {
+      throw new NotFoundException('Produto ou Loja não encontrados');
+    }
+
+    const exists = await this.produtoLojaRepository.findOne({
+      where: {
+        produto: { id: createProdutoLojaDto.idProduto },
+        loja: { id: createProdutoLojaDto.idLoja }
+      }
+    })
+
+    if (exists) {
+      throw new BadRequestException('Este produto já está cadastrado para essa loja!');
+    }
+
+    const produtoLoja = this.produtoLojaRepository.create({
+      produto: produto,
+      loja: loja,
+      precoVenda: createProdutoLojaDto.precoVenda
+    });
+    return this.produtoLojaRepository.save(produtoLoja);
   }
 
-  findAll() {
-    return `This action returns all produtoLoja`;
+  async findAll() {
+    return await this.produtoLojaRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} produtoLoja`;
+  async findOne(id: number) {
+    const produtoLoja = await this.produtoLojaRepository.findOne({ where: { id } })
+    if (!produtoLoja) throw new NotFoundException();
+    return produtoLoja;
   }
 
-  update(id: number, updateProdutoLojaDto: UpdateProdutoLojaDto) {
-    return `This action updates a #${id} produtoLoja`;
+  async update(id: number, updateProdutoLojaDto: UpdateProdutoLojaDto) {
+    const produtoLoja = await this.findOne(id);
+    if (!produtoLoja) throw new NotFoundException();
+    this.produtoLojaRepository.merge(produtoLoja, updateProdutoLojaDto)
+    return await this.produtoLojaRepository.save(produtoLoja);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} produtoLoja`;
+  async remove(id: number) {
+    const produtoLoja = await this.findOne(id);
+    if (!produtoLoja) throw new NotFoundException();
+    return await this.produtoLojaRepository.delete(produtoLoja);
   }
 }
