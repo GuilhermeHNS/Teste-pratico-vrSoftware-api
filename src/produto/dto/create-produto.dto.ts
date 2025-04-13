@@ -1,4 +1,4 @@
-import { IsDefined, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsDefined, IsNotEmpty, IsNumber, isNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength } from "class-validator";
 
 export class CreateProdutoDto {
     @IsDefined({ message: 'A descrição é obrigatória!' })
@@ -8,7 +8,11 @@ export class CreateProdutoDto {
     @MaxLength(60, {message: "A descrição não pode ser maior que 60 caracteres!"})
     descricao: string;
     
-    custo: number;
+    @IsOptional()
+    @IsNumber({ maxDecimalPlaces: 3 }) 
+    @Min(-9999999999.999)
+    @Max(9999999999.999)
+    custo?: number;
     
     @IsOptional()
     imagem?: Buffer;

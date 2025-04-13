@@ -9,7 +9,7 @@ export class Produto {
     @Column({ length: 60, nullable: false})
     descricao: string;
 
-    @Column({ type: 'numeric', precision: 13, scale: 3})
+    @Column({ type: 'numeric', precision: 13, scale: 3, nullable: true})
     custo: number;
 
     @Column({ type: 'bytea', nullable: true })

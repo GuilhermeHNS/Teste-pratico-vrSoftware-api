@@ -7,7 +7,7 @@ export class CreateProdutoLojaTables1744554088405 implements MigrationInterface 
            CREATE TABLE produto (
             id SERIAL PRIMARY KEY,
             descricao VARCHAR(60) NOT NULL,
-            custo NUMERIC(13,3),
+            custo NUMERIC(13,3) NULL,
             imagem BYTEA
           );
 
@@ -21,8 +21,8 @@ export class CreateProdutoLojaTables1744554088405 implements MigrationInterface 
             idProduto INT NOT NULL,
             idLoja INT NOT NULL,
             precoVenda NUMERIC(13,3),
-            CONSTRAINT fk_produto FOREIGN KEY (idProduto) REFERENCES produto(id),
-            CONSTRAINT fk_loja FOREIGN KEY (idLoja) REFERENCES loja(id)
+            CONSTRAINT fk_produto FOREIGN KEY (idProduto) REFERENCES produto(id) ON DELETE CASCADE,
+            CONSTRAINT fk_loja FOREIGN KEY (idLoja) REFERENCES loja(id) ON DELETE CASCADE
           ); 
         `);
     }
