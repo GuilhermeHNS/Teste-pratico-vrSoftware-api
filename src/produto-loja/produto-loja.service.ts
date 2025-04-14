@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LojaService } from 'src/loja/loja.service';
-import { ProdutoService } from 'src/produto/produto.service';
+import { LojaService } from '../loja/loja.service';
+import { ProdutoService } from '../produto/produto.service';
 import { Repository } from 'typeorm';
 import { CreateProdutoLojaDto } from './dto/create-produto-loja.dto';
 import { UpdateProdutoLojaDto } from './dto/update-produto-loja.dto';

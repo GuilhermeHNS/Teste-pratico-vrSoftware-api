@@ -1,5 +1,5 @@
-import { Loja } from "src/loja/entities/loja.entity";
-import { Produto } from "src/produto/entities/produto.entity";
+import { Loja } from "../../loja/entities/loja.entity";
+import { Produto } from "../../produto/entities/produto.entity";
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()

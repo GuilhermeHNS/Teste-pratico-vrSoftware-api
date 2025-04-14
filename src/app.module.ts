@@ -7,6 +7,7 @@ import { join } from 'path';
 import { ProdutoModule } from './produto/produto.module';
 import { LojaModule } from './loja/loja.module';
 import { ProdutoLojaModule } from './produto-loja/produto-loja.module';
+import { ProdutoService } from './produto/produto.service';
 
 @Module({
   imports: [
@@ -32,6 +33,6 @@ import { ProdutoLojaModule } from './produto-loja/produto-loja.module';
     ProdutoLojaModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule {}
