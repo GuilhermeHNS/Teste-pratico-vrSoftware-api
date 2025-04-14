@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { CreateProdutoLojaDto } from './dto/create-produto-loja.dto';
 import { UpdateProdutoLojaDto } from './dto/update-produto-loja.dto';
 import { ProdutoLoja } from './entities/produto-loja.entity';
+import { SelectProdutoLojaByIdProdutoDto } from './dto/select-produto-loja-by-id-produto.dto';
 
 @Injectable()
 export class ProdutoLojaService {
@@ -51,6 +52,14 @@ export class ProdutoLojaService {
     const produtoLoja = await this.produtoLojaRepository.findOne({ where: { id } })
     if (!produtoLoja) throw new NotFoundException();
     return produtoLoja;
+  }
+
+  async findByIdProduto(id: number): Promise<SelectProdutoLojaByIdProdutoDto[]> {
+    return this.produtoLojaRepository.createQueryBuilder('pl')
+      .select(['l.descricao as "descricao"', 'pl.precoVenda as "precoVenda"'])
+      .innerJoin('pl.loja', 'l')
+      .where('pl.produtoId = :id', { id })
+      .getRawMany();
   }
 
   async update(id: number, updateProdutoLojaDto: UpdateProdutoLojaDto) {

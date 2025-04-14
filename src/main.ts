@@ -15,6 +15,17 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors({
+    origin: [
+      'https://seusite.com',
+      'http://localhost:4200' // Para desenvolvimento
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+  });
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

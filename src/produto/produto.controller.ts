@@ -18,9 +18,9 @@ export class ProdutoController {
   }
 
   @Get()
-  findByFilters(@Query('descricao') description?: string, @Query('custo') custo?: number, @Query('precoVenda') precoVenda?: number) {
-    if (description || custo || precoVenda) {
-      return this.produtoService.findByFilters(description, custo, precoVenda);
+  findByFilters(@Query('codigo') codigo?: number, @Query('descricao') description?: string, @Query('custo') custo?: number, @Query('precoVenda') precoVenda?: number) {
+    if (codigo || description || custo || precoVenda) {
+      return this.produtoService.findByFilters(codigo, description, custo, precoVenda);
     }
     return this.produtoService.findAll();
   }

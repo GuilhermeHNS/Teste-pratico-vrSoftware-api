@@ -5,7 +5,7 @@ import { UpdateProdutoLojaDto } from './dto/update-produto-loja.dto';
 
 @Controller('produto-loja')
 export class ProdutoLojaController {
-  constructor(private readonly produtoLojaService: ProdutoLojaService) {}
+  constructor(private readonly produtoLojaService: ProdutoLojaService) { }
 
   @Post()
   create(@Body() createProdutoLojaDto: CreateProdutoLojaDto) {
@@ -20,6 +20,11 @@ export class ProdutoLojaController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.produtoLojaService.findOne(+id);
+  }
+
+  @Get('/produto/:id')
+  findByIdProduto(@Param('id') id: string) {
+    return this.produtoLojaService.findByIdProduto(+id);
   }
 
   @Patch(':id')

@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { ProdutoModule } from './produto/produto.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { LojaModule } from './loja/loja.module';
 import { ProdutoLojaModule } from './produto-loja/produto-loja.module';
-import { ProdutoService } from './produto/produto.service';
+import { ProdutoModule } from './produto/produto.module';
 
 @Module({
   imports: [
@@ -23,7 +22,7 @@ import { ProdutoService } from './produto/produto.service';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASENAME'),
         entities: [join(process.cwd(), 'dist/**/*.entity.js')],
-        synchronize: configService.get('NODE_ENV') === 'development',
+        synchronize: false,
         migrations: ['dist/migrations/*.js'],
         migrationsRun: true
       })
