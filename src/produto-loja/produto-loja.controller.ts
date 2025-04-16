@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { CreateProdutoLojaDto } from './dto/create-produto-loja.dto';
 import { UpdateProdutoLojaDto } from './dto/update-produto-loja.dto';
 import { ProdutoLojaService } from './produto-loja.service';
@@ -23,8 +23,8 @@ export class ProdutoLojaController {
   }
 
   @Get('/produto/:id')
-  findByIdProduto(@Param('id') id: string) {
-    return this.produtoLojaService.findByIdProduto(+id);
+  findByIdProduto(@Param('id') id: string, @Query("page") page: string, @Query("limit") limit: string) {
+    return this.produtoLojaService.findByIdProduto(+id, +page, +limit);
   }
 
   @Patch(':id')

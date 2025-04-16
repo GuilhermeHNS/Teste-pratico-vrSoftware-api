@@ -11,8 +11,10 @@ export class ProdutoLoja {
     precoVenda: number;
 
     @ManyToOne(() => Produto, (produto) => produto.lojas, { onDelete: 'CASCADE' })
+    @JoinColumn({name: "idproduto"})
     produto: Produto;
 
     @ManyToOne(() => Loja, (loja) => loja.produtos, { onDelete: 'CASCADE' })
+    @JoinColumn({name: "idloja"})
     loja: Loja;
 }

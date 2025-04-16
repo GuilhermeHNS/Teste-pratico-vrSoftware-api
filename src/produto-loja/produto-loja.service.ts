@@ -54,12 +54,24 @@ export class ProdutoLojaService {
     return produtoLoja;
   }
 
-  async findByIdProduto(id: number): Promise<SelectProdutoLojaByIdProdutoDto[]> {
-    return this.produtoLojaRepository.createQueryBuilder('pl')
-      .select(['pl.id as "id"', 'pl.lojaId as "idLoja"', 'l.descricao as "descricao"', 'pl.precoVenda as "precoVenda"'])
+  async findByIdProduto(id: number, page: number, limit: number) {
+    const query = this.produtoLojaRepository.createQueryBuilder('pl')
+      .select(['pl.id as "id"', 'pl.idloja as "idloja"', 'l.descricao as "descricao"', 'pl.precovenda as "precoVenda"'])
       .innerJoin('pl.loja', 'l')
-      .where('pl.produtoId = :id', { id })
-      .getRawMany();
+      .where('pl.idproduto = :id', { id })
+      .orderBy('pl.id', 'ASC');
+
+    query.skip((page - 1) * limit).take(limit);
+
+    const data = await query.getRawMany();
+    const total = await query.getCount();
+
+    return {
+      data,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 
   async update(id: number, updateProdutoLojaDto: UpdateProdutoLojaDto) {
