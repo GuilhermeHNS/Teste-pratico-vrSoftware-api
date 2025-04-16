@@ -1,10 +1,9 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
 import { Produto } from './entities/produto.entity';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 @Injectable()
 export class ProdutoService {
@@ -18,8 +17,18 @@ export class ProdutoService {
     return await this.produtoRepository.save(produto);
   }
 
-  async findAll() {
-    return await this.produtoRepository.find();
+  async findAll(page: number, limit: number) {
+    const [data, total] = await this.produtoRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit
+    });
+
+    return {
+      data,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit)
+    }
   }
 
   async findOne(id: number) {
@@ -28,7 +37,7 @@ export class ProdutoService {
     return produto;
   }
 
-  async findByFilters(codigo?: number, description?: string, custo?: number, precoVenda?: number) {
+  async findByFilters(page: number, limit: number, codigo?: number, description?: string, custo?: number, precoVenda?: number) {
     const query = this.produtoRepository
       .createQueryBuilder('produto')
       .leftJoin('produto.lojas', 'produtoLoja');
@@ -49,7 +58,16 @@ export class ProdutoService {
       query.andWhere('produto.custo = :custo', { custo: custo });
     }
 
-    return await query.getMany();
+    query.skip((page - 1) * limit).take(limit);
+
+    const [data, total] = await query.getManyAndCount();
+
+    return {
+      data,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 
   async update(id: number, updateProdutoDto: UpdateProdutoDto) {

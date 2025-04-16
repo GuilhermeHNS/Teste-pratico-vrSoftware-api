@@ -18,11 +18,11 @@ export class ProdutoController {
   }
 
   @Get()
-  findByFilters(@Query('codigo') codigo?: number, @Query('descricao') description?: string, @Query('custo') custo?: number, @Query('precoVenda') precoVenda?: number) {
+  findByFilters(@Query('page') page: string, @Query('limit') limit: string, @Query('codigo') codigo?: number, @Query('descricao') description?: string, @Query('custo') custo?: number, @Query('precoVenda') precoVenda?: number) {
     if (codigo || description || custo || precoVenda) {
-      return this.produtoService.findByFilters(codigo, description, custo, precoVenda);
+      return this.produtoService.findByFilters(+page, +limit, codigo, description, custo, precoVenda);
     }
-    return this.produtoService.findAll();
+    return this.produtoService.findAll(+page, +limit);
   }
 
   @Patch(':id')
