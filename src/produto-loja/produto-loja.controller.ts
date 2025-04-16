@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ProdutoLojaService } from './produto-loja.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateProdutoLojaDto } from './dto/create-produto-loja.dto';
 import { UpdateProdutoLojaDto } from './dto/update-produto-loja.dto';
+import { ProdutoLojaService } from './produto-loja.service';
 
 @Controller('produto-loja')
 export class ProdutoLojaController {
@@ -36,4 +36,5 @@ export class ProdutoLojaController {
   remove(@Param('id') id: string) {
     return this.produtoLojaService.remove(+id);
   }
+
 }

@@ -1,6 +1,6 @@
 import { Loja } from "../../loja/entities/loja.entity";
 import { Produto } from "../../produto/entities/produto.entity";
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class ProdutoLoja {

@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { LojaService } from '../loja/loja.service';
 import { ProdutoService } from '../produto/produto.service';
-import { Repository } from 'typeorm';
 import { CreateProdutoLojaDto } from './dto/create-produto-loja.dto';
+import { SelectProdutoLojaByIdProdutoDto } from './dto/select-produto-loja-by-id-produto.dto';
 import { UpdateProdutoLojaDto } from './dto/update-produto-loja.dto';
 import { ProdutoLoja } from './entities/produto-loja.entity';
-import { SelectProdutoLojaByIdProdutoDto } from './dto/select-produto-loja-by-id-produto.dto';
 
 @Injectable()
 export class ProdutoLojaService {
@@ -56,7 +56,7 @@ export class ProdutoLojaService {
 
   async findByIdProduto(id: number): Promise<SelectProdutoLojaByIdProdutoDto[]> {
     return this.produtoLojaRepository.createQueryBuilder('pl')
-      .select(['l.descricao as "descricao"', 'pl.precoVenda as "precoVenda"'])
+      .select(['pl.id as "id"', 'pl.lojaId as "idLoja"', 'l.descricao as "descricao"', 'pl.precoVenda as "precoVenda"'])
       .innerJoin('pl.loja', 'l')
       .where('pl.produtoId = :id', { id })
       .getRawMany();
@@ -74,4 +74,5 @@ export class ProdutoLojaService {
     if (!produtoLoja) throw new NotFoundException();
     return await this.produtoLojaRepository.delete(produtoLoja);
   }
+
 }
