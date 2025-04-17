@@ -1,15 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
-import { ProdutoService } from './produto.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
+import { ProdutoService } from './produto.service';
 
 @Controller('produto')
 export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) { }
 
   @Post()
-  create(@Body() createProdutoDto: CreateProdutoDto) {
-    return this.produtoService.create(createProdutoDto);
+  @UseInterceptors(FileInterceptor('imagem'))
+  create(@UploadedFile() file: { buffer: Buffer }, @Body() body: any) {
+    const custo = body.custo ? parseFloat(body.custo) : undefined;
+
+    const produtoDto: CreateProdutoDto = {
+      descricao: body.descricao,
+      custo: custo,
+      imagem: file?.buffer
+    };
+    return this.produtoService.create(produtoDto);
   }
 
   @Get(':id')
@@ -25,9 +34,21 @@ export class ProdutoController {
     return this.produtoService.findAll(+page, +limit);
   }
 
+  @Get('/imagem/:id')
+  findImagemById(@Param('id') id: string) {
+    return this.produtoService.findImageById(+id);
+  }
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProdutoDto: UpdateProdutoDto) {
-    return this.produtoService.update(+id, updateProdutoDto);
+  @UseInterceptors(FileInterceptor('imagem'))
+  update(@Param('id') id: string, @Body() body: any, @UploadedFile() file?: { buffer: Buffer }) {
+    const custo = body.custo ? parseFloat(body.custo) : undefined;
+    const updateProduto: UpdateProdutoDto = {
+      descricao: body.descricao,
+      custo: custo,
+      imagem: file?.buffer
+    }
+    return this.produtoService.update(+id, updateProduto);
   }
 
   @Delete(':id')

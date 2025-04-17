@@ -18,11 +18,17 @@ export class ProdutoService {
   }
 
   async findAll(page: number, limit: number) {
-    const [data, total] = await this.produtoRepository.findAndCount({
+    const [result, total] = await this.produtoRepository.findAndCount({
       skip: (page - 1) * limit,
       take: limit
     });
-
+    const data = result.map((item) => {
+      return {
+        id: item.id,
+        descricao: item.descricao,
+        custo: item.custo
+      }
+    })
     return {
       data,
       total,
@@ -35,6 +41,14 @@ export class ProdutoService {
     const produto = await this.produtoRepository.findOne({ where: { id } });
     if (!produto) throw new NotFoundException("Produto não encontrado!");
     return produto;
+  }
+
+  async findImageById(id: number) {
+    const produto = await this.findOne(id);
+    const base64 = produto.imagem ? `data:image/png;base64,${produto.imagem.toString('base64')}` : '';
+    return {
+      imagemBase64: base64
+    }
   }
 
   async findByFilters(page: number, limit: number, codigo?: number, description?: string, custo?: number, precoVenda?: number) {
