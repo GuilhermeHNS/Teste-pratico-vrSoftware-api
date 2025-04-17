@@ -55,16 +55,22 @@ export class ProdutoLojaService {
   }
 
   async findByIdProduto(id: number, page: number, limit: number) {
-    const query = this.produtoLojaRepository.createQueryBuilder('pl')
-      .select(['pl.id as "id"', 'pl.idloja as "idloja"', 'l.descricao as "descricao"', 'pl.precovenda as "precoVenda"'])
-      .innerJoin('pl.loja', 'l')
-      .where('pl.idproduto = :id', { id })
-      .orderBy('pl.id', 'ASC');
+    const [values, total] = await this.produtoLojaRepository.findAndCount({
+      relations: ['loja'],
+      where: { produto: { id } },
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { id: 'ASC' },
+    });
 
-    query.skip((page - 1) * limit).take(limit);
-
-    const data = await query.getRawMany();
-    const total = await query.getCount();
+    const data = values.map((item) => {
+      return {
+        id: item.id,
+        idLoja: item.loja.id,
+        descricao: item.loja.descricao,
+        precoVenda: item.precoVenda
+      }
+    })
 
     return {
       data,
@@ -72,6 +78,7 @@ export class ProdutoLojaService {
       page,
       lastPage: Math.ceil(total / limit),
     };
+
   }
 
   async update(id: number, updateProdutoLojaDto: UpdateProdutoLojaDto) {

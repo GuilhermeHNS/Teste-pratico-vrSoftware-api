@@ -18,11 +18,11 @@ export class CreateProdutoLojaTables1744554088405 implements MigrationInterface 
 
           CREATE TABLE produto_loja (
             id SERIAL PRIMARY KEY,
-            idProduto INT NOT NULL,
-            idLoja INT NOT NULL,
+            idproduto INT NOT NULL,
+            idloja INT NOT NULL,
             precoVenda NUMERIC(13,3),
-            CONSTRAINT fk_produto FOREIGN KEY (idProduto) REFERENCES produto(id) ON DELETE CASCADE,
-            CONSTRAINT fk_loja FOREIGN KEY (idLoja) REFERENCES loja(id) ON DELETE CASCADE
+            CONSTRAINT fk_produto FOREIGN KEY (idproduto) REFERENCES produto(id) ON DELETE CASCADE,
+            CONSTRAINT fk_loja FOREIGN KEY (idloja) REFERENCES loja(id) ON DELETE CASCADE
           ); 
         `);
     }

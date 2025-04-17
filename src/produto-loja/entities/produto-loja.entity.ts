@@ -7,7 +7,7 @@ export class ProdutoLoja {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'numeric', precision: 13, scale: 3 })
+    @Column({ name:'precovenda', type: 'numeric', precision: 13, scale: 3 })
     precoVenda: number;
 
     @ManyToOne(() => Produto, (produto) => produto.lojas, { onDelete: 'CASCADE' })

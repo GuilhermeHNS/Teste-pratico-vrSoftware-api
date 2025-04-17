@@ -21,8 +21,8 @@ import { ProdutoModule } from './produto/produto.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASENAME'),
-        entities: [join(process.cwd(), 'dist/**/*.entity.js')],
         synchronize: false,
+        entities: [`${__dirname}/**/*.entity{.js, .ts}`],
         migrations: ['dist/migrations/*.js'],
         migrationsRun: true
       })
