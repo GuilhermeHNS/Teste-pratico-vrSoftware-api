@@ -20,7 +20,10 @@ export class ProdutoService {
   async findAll(page: number, limit: number) {
     const [result, total] = await this.produtoRepository.findAndCount({
       skip: (page - 1) * limit,
-      take: limit
+      take: limit,
+      order: {
+        id: 'ASC'
+      }
     });
     const data = result.map((item) => {
       return {
